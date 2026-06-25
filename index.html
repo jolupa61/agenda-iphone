@@ -139,24 +139,24 @@
         </div>
     </div>
 
-    <div id="modale-reglages" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-[#1c1c1e] text-white w-full max-w-xs rounded-2xl p-4 space-y-4 text-sm border border-white/10">
-            <div class="flex justify-between items-center border-b border-white/10 pb-2">
-                <h3 class="font-bold text-base">Réglages</h3>
-                <button onclick="fermerReglages()" ontouchstart="fermerReglages()" class="text-blue-400 font-bold">OK</button>
+    <div id="modale-reglages" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[#1c1c1e] text-white w-[92%] max-w-sm rounded-2xl p-6 space-y-5 text-base shadow-2xl border border-white/10">
+            <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                <h3 class="font-bold text-lg tracking-wide">Réglages</h3>
+                <button onclick="fermerReglages()" ontouchstart="fermerReglages()" class="text-blue-400 font-bold text-base px-2 py-1 bg-white/5 rounded-lg">OK</button>
             </div>
-            <div class="space-y-2">
-                <div class="space-y-1">
-                    <label class="text-[10px] text-gray-400 font-semibold uppercase">Le Papier</label>
-                    <select id="reg-papier" onchange="changeRegrage('stylePapier', this.value)" class="w-full bg-[#2c2c2e] p-2 rounded-lg text-xs outline-none text-white">
+            <div class="space-y-4">
+                <div class="space-y-1.5">
+                    <label class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Le Papier</label>
+                    <select id="reg-papier" onchange="changeRegrage('stylePapier', this.value)" class="w-full bg-[#2c2c2e] p-3 rounded-xl text-sm outline-none text-white h-12 border border-white/5">
                         <option value="ligné">📝 Ligné</option>
                         <option value="quadrillé">🔲 Carré</option>
                         <option value="blanc">📄 Blanc</option>
                     </select>
                 </div>
-                <div class="space-y-1">
-                    <label class="text-[10px] text-gray-400 font-semibold uppercase">Écriture</label>
-                    <select id="reg-police" onchange="changeRegrage('stylePoliceNotes', this.value)" class="w-full bg-[#2c2c2e] p-2 rounded-lg text-xs outline-none text-white">
+                <div class="space-y-1.5">
+                    <label class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Écriture</label>
+                    <select id="reg-police" onchange="changeRegrage('stylePoliceNotes', this.value)" class="w-full bg-[#2c2c2e] p-3 rounded-xl text-sm outline-none text-white h-12 border border-white/5">
                         <option value="manuscrit">✍️ Main</option>
                         <option value="classique">📜 Classique</option>
                         <option value="moderne">📱 Digitale</option>
@@ -164,10 +164,10 @@
                 </div>
             </div>
             
-            <div class="pt-3 border-t border-white/10 space-y-2">
-                <label class="text-[10px] text-gray-400 font-semibold uppercase block">Sauvegarde</label>
-                <button onclick="exporterJSON()" ontouchstart="exporterJSON()" class="w-full bg-indigo-600/30 text-indigo-400 border border-indigo-500/30 py-2 rounded-lg text-xs font-medium">Exporter vers Fichiers (JSON)</button>
-                <label class="w-full bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 py-2 rounded-lg text-xs font-medium block text-center cursor-pointer">
+            <div class="pt-4 border-t border-white/10 space-y-2.5">
+                <label class="text-xs text-gray-400 font-semibold uppercase tracking-wider block">Sauvegarde</label>
+                <button onclick="exporterJSON()" ontouchstart="exporterJSON()" class="w-full bg-indigo-600/30 text-indigo-400 border border-indigo-500/30 py-3 rounded-xl text-xs font-semibold tracking-wide">Exporter vers Fichiers (JSON)</button>
+                <label class="w-full bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 py-3 rounded-xl text-xs font-semibold tracking-wide block text-center cursor-pointer">
                     Importer depuis Fichiers (JSON)
                     <input type="file" accept=".json" class="hidden" onchange="importerJSON(this)">
                 </label>
@@ -221,8 +221,6 @@
         function sauverNotes() {
             localStorage.setItem('notes_iphone', document.getElementById('zone-notes').value);
         }
-        
-        // Modification : ajout du stopPropagation pour éviter les interférences tactiles sur iOS
         function ouvrirReglages(e) { 
             if(e) { e.stopPropagation(); e.preventDefault(); }
             document.getElementById('modale-reglages').style.display = "flex"; 
@@ -307,11 +305,12 @@
                         let d = new Date(r.date);
                         return d.getDate() === dateAncre.getDate() && d.getMonth() === dateAncre.getMonth() && d.getFullYear() === dateAncre.getFullYear() && r.heureDebut === h;
                     });
-                    html += `<div class="flex items-center gap-3 h-14 border-b border-black/5">
+                    html += `<div class="flex items-center gap-3 h-14 border-b border-black/5 relative">
                         <span class="text-sm font-bold opacity-40 w-10">${String(h).padStart(2, '0')}h</span>
-                        <div class="flex-1 h-full flex items-center">`;
+                        <div class="flex-1 h-full flex items-center pr-10">`; // Espace à droite reservé pour le bouton +
                     if(rdv.length === 0) {
-                        html += `<button onclick="ouvrirEditeur(${h})" ontouchstart="ouvrirEditeur(${h})" class="w-full h-full text-left text-black/5 text-base flex items-center">➕</button>`;
+                        html += `<div class="w-full h-full"></div>
+                        <button onclick="ouvrirEditeur(${h})" ontouchstart="ouvrirEditeur(${h})" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-sm font-bold bg-black/5 opacity-20 rounded-full active:opacity-60">➕</button>`;
                     } else {
                         rdv.forEach(r => {
                             html += `<div onclick="ouvrirModif('${r.id}')" ontouchstart="ouvrirModif('${r.id}')" class="w-full text-sm font-bold p-2 rounded" style="background: ${couleursCats[r.categorie]}15; color: #1c1c1e; border-left: 4px solid ${couleursCats[r.categorie]}">${r.titre}</div>`;
@@ -395,7 +394,7 @@
             setFormCat('Pro');
             document.getElementById('modale-editeur').style.display = "flex";
         }
-        function abrirModif(id) {
+        function ouvrirModif(id) {
             targetRdvId = id;
             let r = evenements.find(x => x.id === id);
             document.getElementById('editeur-titre-mode').innerText = "Modifier l'Événement";
