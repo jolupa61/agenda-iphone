@@ -30,28 +30,32 @@
 </head>
 <body class="bg-[#242426] text-black antialiased flex flex-col h-full overflow-hidden pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
 
+    <!-- ÉCRAN EN CAS DE ROTATION ACCIDENTELLE -->
     <div id="bloqueur-orientation" class="fixed inset-0 bg-[#242426] text-white z-50 hidden flex-col items-center justify-center p-6 text-center">
         <span class="text-4xl mb-4">📱</span>
         <p class="font-serif text-lg">Merci de remettre votre iPhone en mode Portrait.</p>
     </div>
 
+    <!-- COUVERTURE FERMÉE (Modifiée en DIV + Double événement Clic/Touch pour iPhone) -->
     <div id="vue-couverture" class="fixed inset-0 flex items-center justify-center p-6 z-50 bg-[#242426]">
-        <button onclick="ouvrirCarnet()" class="w-full max-w-xs aspect-[3/4] rounded-2xl relative shadow-2xl flex flex-col items-center justify-between p-8 text-center bg-[#141416] text-[#ccaa66]" id="cuir-couverture">
+        <div onclick="ouvrirCarnet()" ontouchstart="ouvrirCarnet()" class="w-full max-w-xs aspect-[3/4] rounded-2xl relative shadow-2xl flex flex-col items-center justify-between p-8 text-center bg-[#141416] text-[#ccaa66] cursor-pointer select-none" id="cuir-couverture">
             <div class="absolute left-0 top-0 bottom-0 w-4 bg-black/30 rounded-l-2xl border-r border-black/10"></div>
             <div class="mt-12 flex flex-col items-center gap-4">
                 <span class="text-4xl">📔</span>
                 <h1 class="text-3xl font-serif tracking-[0.3em] font-bold">AGENDA</h1>
             </div>
-            <div class="bg-white/5 text-white/60 text-xs font-semibold tracking-wider uppercase px-6 py-3 rounded-xl border border-white/10 mb-4">
+            <div class="bg-white/5 text-white/60 text-xs font-semibold tracking-wider uppercase px-6 py-3 rounded-xl border border-white/10 mb-4 pointer-events-none">
                 Ouvrir le carnet
             </div>
-        </button>
+        </div>
     </div>
 
+    <!-- CARNET OUVERT -->
     <div id="vue-interieur" class="hidden flex-1 flex flex-col overflow-hidden relative">
         
+        <!-- BARRE OUTILS -->
         <header class="h-12 shrink-0 flex justify-between items-center px-4 text-white z-10">
-            <button onclick="fermerCarnet()" class="text-sm bg-white/10 px-3 py-1.5 rounded-lg">📁 Fermer</button>
+            <button onclick="fermerCarnet()" ontouchstart="fermerCarnet()" class="text-sm bg-white/10 px-3 py-1.5 rounded-lg">📁 Fermer</button>
             <div class="flex gap-4">
                 <button onclick="setStylo('encre')" class="w-6 h-6 rounded-full bg-[#1c1c1e] border-2 border-white shadow" id="btn-stylo-encre"></button>
                 <button onclick="setStylo('bleu')" class="w-6 h-6 rounded-full bg-[#1d4ed8]" id="btn-stylo-bleu"></button>
@@ -60,6 +64,7 @@
             <button onclick="ouvrirReglages()" class="text-2xl p-1">⚙️</button>
         </header>
 
+        <!-- PAGE PRINCIPALE : L'AGENDA -->
         <main class="flex-1 flex flex-col m-2 rounded-xl shadow-xl overflow-hidden relative" id="page-gauche" style="background-color: #faf9f5;">
             <div class="p-4 shrink-0 border-b border-black/5">
                 <div class="flex justify-between items-center mb-3">
@@ -81,11 +86,13 @@
                 </div>
             </div>
 
+            <!-- Contenu de l'agenda -->
             <div id="moteur-agenda" class="flex-1 overflow-y-auto p-4 no-scrollbar"></div>
             
             <div onclick="ouvrirNotes()" class="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-24 bg-amber-600/30 rounded-l-md cursor-pointer flex items-center justify-center text-[10px] text-amber-900 font-bold">◀</div>
         </main>
 
+        <!-- VOLET GLISSANT : LES NOTES -->
         <div id="volet-notes" class="absolute top-12 bottom-2 right-0 w-[92%] z-40 translate-x-full flex shadow-2xl">
             <div class="flex-1 rounded-l-xl p-4 flex flex-col border-l border-black/10" id="page-droite" style="background-color: #faf9f5;">
                 <div class="flex justify-between items-center mb-3 border-b border-black/5 pb-1">
@@ -100,6 +107,7 @@
 
     </div>
 
+    <!-- MODALE RDV COMPLÈTE -->
     <div id="modale-editeur" class="fixed inset-0 bg-black/60 z-50 hidden flex items-end justify-center p-4 backdrop-blur-xs">
         <div class="bg-[#1c1c1e] text-white w-full rounded-2xl p-5 space-y-4 shadow-2xl border border-white/10">
             <div class="flex justify-between items-center border-b border-white/10 pb-2">
@@ -139,6 +147,7 @@
         </div>
     </div>
 
+    <!-- MODALE RÉGLAGES -->
     <div id="modale-reglages" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-[#1c1c1e] text-white w-full max-w-xs rounded-2xl p-4 space-y-4 text-sm border border-white/10">
             <div class="flex justify-between items-center border-b border-white/10 pb-2">
@@ -165,7 +174,7 @@
             </div>
             
             <div class="pt-3 border-t border-white/10 space-y-2">
-                <label class="text-[10px] text-gray-400 font-semibold uppercase block">Sauvegarde (kDrive / Fichiers)</label>
+                <label class="text-[10px] text-gray-400 font-semibold uppercase block">Sauvegarde</label>
                 <button onclick="exporterJSON()" class="w-full bg-indigo-600/30 text-indigo-400 border border-indigo-500/30 py-2 rounded-lg text-xs font-medium">Exporter vers Fichiers (JSON)</button>
                 <label class="w-full bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 py-2 rounded-lg text-xs font-medium block text-center cursor-pointer">
                     Importer depuis Fichiers (JSON)
@@ -176,12 +185,19 @@
     </div>
 
     <script>
-        let settings = {
-            stylePapier: localStorage.getItem('iphone_stylePapier') || 'ligné',
-            stylePoliceNotes: localStorage.getItem('iphone_stylePoliceNotes') || 'manuscrit',
-            couleurStylos: localStorage.getItem('iphone_couleurStylos') || 'encre'
-        };
-        let evenements = JSON.parse(localStorage.getItem('events_iphone')) || [];
+        // Sécurité LocalStorage pour éviter les crashs de démarrage
+        let settings = { stylePapier: 'ligné', stylePoliceNotes: 'manuscrit', couleurStylos: 'encre' };
+        try {
+            settings.stylePapier = localStorage.getItem('iphone_stylePapier') || 'ligné';
+            settings.stylePoliceNotes = localStorage.getItem('iphone_stylePoliceNotes') || 'manuscrit';
+            settings.couleurStylos = localStorage.getItem('iphone_couleurStylos') || 'encre';
+        } catch(e) { console.error(e); }
+
+        let evenements = [];
+        try {
+            evenements = JSON.parse(localStorage.getItem('events_iphone')) || [];
+        } catch(e) { evenements = []; }
+
         let modeAffichage = 2; 
         let dateAncre = new Date();
         let selectedFormCat = "Pro";
@@ -191,18 +207,18 @@
         const couleursCats = { "Pro": "#3b82f6", "Perso": "#22c55e", "Loisir": "#f97316", "Médical": "#a855f7", "Important": "#ef4444" };
 
         window.onload = function() {
-            setMode(2); // Initialise sur l'affichage "Mois" de base
+            setMode(2); 
             syncUI();
         };
 
         function ouvrirCarnet() {
-            document.getElementById('vue-couverture').classList.add('hidden');
+            document.getElementById('vue-couverture').style.display = 'none';
             document.getElementById('vue-interieur').classList.remove('hidden');
             syncUI();
         }
         function fermerCarnet() {
             document.getElementById('vue-interieur').classList.add('hidden');
-            document.getElementById('vue-couverture').classList.remove('hidden');
+            document.getElementById('vue-couverture').style.display = 'flex';
         }
         function ouvrirNotes() {
             notesOuvertes = true;
