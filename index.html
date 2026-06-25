@@ -5,22 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Indication pour iOS d'éviter la rotation si ajouté sur l'écran d'accueil -->
+    <meta name="apple-mobile-web-app-orientations" content="portrait">
     
     <link class="apple-touch-icon" rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/510/ffffff/journal.png">
     
-    <title>Agenda Moleskine</title>
+    <title>Agenda iPhone Portrait</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        .font-manuscrit { font-family: "Chalkboard SE", "Comic Sans MS", sans-serif; }
+        .font-classique { font-family: "Times New Roman", Georgia, serif; }
+        .font-moderne { font-family: system-ui, sans-serif; }
         .papier-ligne { background-image: linear-gradient(#c6c6c8 1px, transparent 1px); background-size: 100% 28px; line-height: 28px; }
         .papier-quadrille { background-image: linear-gradient(rgba(198,198,200,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(198,198,200,0.3) 1px, transparent 1px); background-size: 20px 20px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        /* Animation du panneau de notes */
-        #volet-notes { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        
+        /* Forcer le mode portrait visuellement même si l'appareil tourne */
+        @media screen and (orientation: landscape) {
+            #bloqueur-orientation { display: flex !important; }
+        }
+
+        #volet-notes { transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
     </style>
 </head>
 <body class="bg-[#242426] text-black antialiased flex flex-col h-full overflow-hidden pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+
+    <!-- ÉCRAN EN CAS DE ROTATION ACCIDENTELLE -->
+    <div id="bloqueur-orientation" class="fixed inset-0 bg-[#242426] text-white z-50 hidden flex-col items-center justify-center p-6 text-center">
+        <span class="text-4xl mb-4">📱</span>
+        <p class="font-serif text-lg">Merci de remettre votre iPhone en mode Portrait.</p>
+    </div>
 
     <!-- COUVERTURE FERMÉE -->
     <div id="vue-couverture" class="fixed inset-0 flex items-center justify-center p-6 z-50 bg-[#242426]">
@@ -36,35 +52,35 @@
         </button>
     </div>
 
-    <!-- CARNET OUVERT (ZONE PRINCIPALE IPAD/IPHONE) -->
+    <!-- CARNET OUVERT -->
     <div id="vue-interieur" class="hidden flex-1 flex flex-col overflow-hidden relative">
         
         <!-- BARRE OUTILS -->
-        <header class="h-12 shrink-0 flex justify-between items-center px-4 text-white">
+        <header class="h-12 shrink-0 flex justify-between items-center px-4 text-white z-10">
             <button onclick="fermerCarnet()" class="text-xs bg-white/10 px-3 py-1.5 rounded-lg">📁 Fermer</button>
-            <div class="flex gap-4">
-                <button onclick="setStylo('encre')" class="w-6 h-6 rounded-full bg-[#1c1c1e] border-2 border-white shadow" id="btn-stylo-encre"></button>
-                <button onclick="setStylo('bleu')" class="w-6 h-6 rounded-full bg-[#1d4ed8]" id="btn-stylo-bleu"></button>
-                <button onclick="setStylo('rouge')" class="w-6 h-6 rounded-full bg-[#b91c1c]" id="btn-stylo-rouge"></button>
+            <div class="flex gap-3">
+                <button onclick="setStylo('encre')" class="w-5 h-5 rounded-full bg-[#1c1c1e] border border-white shadow" id="btn-stylo-encre"></button>
+                <button onclick="setStylo('bleu')" class="w-5 h-5 rounded-full bg-[#1d4ed8]" id="btn-stylo-bleu"></button>
+                <button onclick="setStylo('rouge')" class="w-5 h-5 rounded-full bg-[#b91c1c]" id="btn-stylo-rouge"></button>
             </div>
-            <button onclick="toggleNotes()" class="text-xs bg-amber-600 px-3 py-1.5 rounded-lg font-bold">📝 Notes</button>
+            <button onclick="ouvrirReglages()" class="text-xl p-1">⚙️</button>
         </header>
 
         <!-- PAGE PRINCIPALE : L'AGENDA -->
         <main class="flex-1 flex flex-col m-2 rounded-xl shadow-xl overflow-hidden relative" id="page-gauche" style="background-color: #faf9f5;">
-            <div class="p-4 shrink-0 border-b border-black/5">
-                <div class="flex justify-between items-center mb-3">
+            <div class="p-3 shrink-0 border-b border-black/5">
+                <div class="flex justify-between items-center mb-2">
                     <div class="flex items-center gap-2">
-                        <h2 class="text-base font-bold font-serif uppercase tracking-wider" id="label-date-ancre">Jeudi 25 Juin 2026</h2>
-                        <button onclick="allerAujourdhui()" id="btn-today" class="hidden text-[9px] bg-red-600 text-white font-bold px-2 py-0.5 rounded-full">AUJ</button>
+                        <h2 class="text-sm font-bold font-serif uppercase tracking-wider" id="label-date-ancre">Jeudi 25 Juin 2026</h2>
+                        <button onclick="allerAujourdhui()" id="btn-today" class="hidden text-[8px] bg-red-600 text-white font-bold px-1.5 py-0.5 rounded-full">AUJ</button>
                     </div>
                     <div class="flex gap-4 text-sm font-bold">
-                        <button onclick="naviguerDate(-1)" class="p-1">◀</button>
-                        <button onclick="naviguerDate(1)" class="p-1">▶</button>
+                        <button onclick="naviguerDate(-1)" class="px-2 py-0.5">◀</button>
+                        <button onclick="naviguerDate(1)" class="px-2 py-0.5">▶</button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-4 gap-1 p-1 bg-black/5 rounded-lg text-center text-xs font-semibold">
+                <div class="grid grid-cols-4 gap-1 p-0.5 bg-black/5 rounded-lg text-center text-[11px] font-semibold">
                     <button onclick="setMode(0)" id="btn-mode-0" class="py-1 rounded-md text-gray-500">Jour</button>
                     <button onclick="setMode(1)" id="btn-mode-1" class="py-1 rounded-md text-gray-500">Sem.</button>
                     <button onclick="setMode(2)" id="btn-mode-2" class="py-1 rounded-md text-gray-500">Mois</button>
@@ -72,34 +88,33 @@
                 </div>
             </div>
 
-            <!-- Contenu dynamique de l'agenda -->
-            <div id="moteur-agenda" class="flex-1 overflow-y-auto p-4 no-scrollbar"></div>
+            <!-- Contenu de l'agenda -->
+            <div id="moteur-agenda" class="flex-1 overflow-y-auto p-3 no-scrollbar"></div>
+            
+            <!-- Indication discrète de glissement pour les notes -->
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-12 bg-amber-600/30 rounded-l-md"></div>
         </main>
 
-        <!-- VOLET GLISSANT : LES NOTES (Caché sur la droite par défaut) -->
-        <div id="volet-notes" class="absolute top-12 bottom-2 right-0 w-[85%] z-40 translate-x-full flex shadow-2xl">
-            <!-- Petite languette pour refermer -->
-            <button onclick="toggleNotes()" class="w-8 h-16 bg-amber-600 self-center rounded-l-xl flex items-center justify-center text-white text-xs shadow-l">◀</button>
-            
-            <!-- Fond du papier de notes -->
+        <!-- VOLET GLISSANT : LES NOTES (S'ouvre par SWIPE vers la gauche) -->
+        <div id="volet-notes" class="absolute top-12 bottom-2 right-0 w-[90%] z-40 translate-x-full flex shadow-2xl">
             <div class="flex-1 rounded-l-xl p-4 flex flex-col border-l border-black/10" id="page-droite" style="background-color: #faf9f5;">
                 <div class="flex justify-between items-center mb-2 border-b border-black/5 pb-1">
                     <h3 class="text-xs italic font-serif opacity-50">Notes Volantes</h3>
-                    <button onclick="toggleNotes()" class="text-xs font-bold text-amber-800">Fermer ✕</button>
+                    <button onclick="fermerNotes()" class="text-xs font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">Glisser ➔</button>
                 </div>
                 <div class="flex-1 relative rounded-lg overflow-hidden" id="box-fond-papier">
-                    <textarea id="zone-notes" oninput="sauverNotes()" class="w-full h-full bg-transparent resize-none border-none outline-none focus:ring-0 p-1 papier-ligne text-sm" placeholder="Écrire une note..."></textarea>
+                    <textarea id="zone-notes" oninput="sauverNotes()" class="w-full h-full bg-transparent resize-none border-none outline-none focus:ring-0 p-1 text-sm" placeholder="Écrivez vos notes ici..."></textarea>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- MODALE RDV SIMPLE -->
+    <!-- MODALE RDV -->
     <div id="modale-editeur" class="fixed inset-0 bg-black/60 z-50 hidden flex items-end justify-center p-4">
         <div class="bg-[#1c1c1e] text-white w-full rounded-2xl p-5 space-y-4 shadow-2xl">
             <div class="flex justify-between items-center">
-                <h4 class="font-bold">Événement</h4>
+                <h4 class="font-bold text-sm">Événement</h4>
                 <button onclick="fermerEditeur()" class="text-blue-400 text-sm">Annuler</button>
             </div>
             <input type="text" id="form-titre" placeholder="Titre" class="w-full bg-[#2c2c2e] px-3 py-2 rounded-lg text-sm outline-none">
@@ -110,8 +125,38 @@
         </div>
     </div>
 
+    <!-- MODALE RÉGLAGES -->
+    <div id="modale-reglages" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[#1c1c1e] text-white w-full max-w-xs rounded-2xl p-4 space-y-3 text-sm">
+            <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                <h3 class="font-bold">Réglages</h3>
+                <button onclick="fermerReglages()" class="text-blue-400 font-bold">OK</button>
+            </div>
+            <div class="space-y-1">
+                <label class="text-[10px] text-gray-400 font-semibold uppercase">Le Papier</label>
+                <select id="reg-papier" onchange="changeReglage('stylePapier', this.value)" class="w-full bg-[#2c2c2e] p-1.5 rounded-lg text-xs outline-none">
+                    <option value="ligné">📝 Ligné</option>
+                    <option value="quadrillé">🔲 Carré</option>
+                    <option value="blanc">📄 Blanc</option>
+                </select>
+            </div>
+            <div class="space-y-1">
+                <label class="text-[10px] text-gray-400 font-semibold uppercase">Écriture</label>
+                <select id="reg-police" onchange="changeRegrage('stylePoliceNotes', this.value)" class="w-full bg-[#2c2c2e] p-1.5 rounded-lg text-xs outline-none">
+                    <option value="manuscrit">✍️ Main</option>
+                    <option value="classique">📜 Classique</option>
+                    <option value="moderne">📱 Digitale</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
     <script>
-        let settings = { couleurStylos: 'encre', notesSemaine: localStorage.getItem('notes_iphone') || '' };
+        let settings = {
+            stylePapier: localStorage.getItem('iphone_stylePapier') || 'ligné',
+            stylePoliceNotes: localStorage.getItem('iphone_stylePoliceNotes') || 'manuscrit',
+            couleurStylos: localStorage.getItem('iphone_couleurStylos') || 'encre'
+        };
         let evenements = JSON.parse(localStorage.getItem('events_iphone')) || [];
         let modeAffichage = 2; 
         let dateAncre = new Date();
@@ -127,21 +172,34 @@
             document.getElementById('vue-interieur').classList.add('hidden');
             document.getElementById('vue-couverture').classList.remove('hidden');
         }
-        function toggleNotes() {
-            notesOuvertes = !notesOuvertes;
-            document.getElementById('volet-notes').style.transform = notesOuvertes ? 'translateX(0)' : 'translateX(100%)';
+        function ouvrirNotes() {
+            notesOuvertes = true;
+            document.getElementById('volet-notes').style.transform = 'translateX(0)';
+        }
+        function fermerNotes() {
+            notesOuvertes = false;
+            document.getElementById('volet-notes').style.transform = 'translateX(100%)';
         }
         function sauverNotes() {
             localStorage.setItem('notes_iphone', document.getElementById('zone-notes').value);
         }
+        function ouvrirReglages() { document.getElementById('modale-reglages').style.display = "flex"; }
+        function fermerReglages() { document.getElementById('modale-reglages').style.display = "none"; }
+        
+        function changeReglage(cle, valeur) {
+            settings[cle] = valeur;
+            localStorage.setItem('iphone_' + cle, valeur);
+            syncUI();
+        }
         function setStylo(c) {
             settings.couleurStylos = c;
+            localStorage.setItem('iphone_couleurStylos', c);
             syncUI();
         }
         function setMode(m) {
             modeAffichage = m;
             for(let i=0; i<4; i++) {
-                document.getElementById(`btn-mode-${i}`).className = i === m ? "py-1 rounded-md bg-white shadow-xs font-bold text-black" : "py-1 rounded-md text-gray-500";
+                document.getElementById(`btn-mode-${i}`).className = i === m ? "py-1 rounded-md bg-white shadow-sm font-bold text-black" : "py-1 rounded-md text-gray-500";
             }
             renderAgenda();
         }
@@ -157,12 +215,23 @@
         function syncUI() {
             document.getElementById('zone-notes').value = localStorage.getItem('notes_iphone') || '';
             const encres = { "encre": "#1c1c1e", "bleu": "#1d4ed8", "rouge": "#b91c1c" };
-            document.getElementById('zone-notes').style.color = encres[settings.couleurStylos];
+            const couleurEncre = encres[settings.couleurStylos];
             
+            document.getElementById('zone-notes').style.color = couleurEncre;
+            document.getElementById('box-fond-papier').className = "w-full flex-1 relative rounded-lg " + (settings.stylePapier === 'ligné' ? 'papier-ligne' : (settings.stylePapier === 'quadrillé' ? 'papier-quadrille' : ''));
+            
+            let fontClass = "font-manuscrit";
+            if(settings.stylePoliceNotes === 'classique') fontClass = "font-classique";
+            else if(settings.stylePoliceNotes === 'moderne') fontClass = "font-moderne";
+            document.getElementById('zone-notes').className = `w-full h-full bg-transparent resize-none border-none outline-none focus:ring-0 p-1 ${fontClass}`;
+
+            document.getElementById('reg-papier').value = settings.stylePapier;
+            document.getElementById('reg-police').value = settings.stylePoliceNotes;
+
             const auj = new Date();
             const estAuj = dateAncre.getDate() === auj.getDate() && dateAncre.getMonth() === auj.getMonth() && dateAncre.getFullYear() === auj.getFullYear();
             document.getElementById('btn-today').style.display = estAuj ? 'none' : 'inline-block';
-            document.getElementById('label-date-ancre').innerText = dateAncre.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'short' });
+            document.getElementById('label-date-ancre').innerText = dateAncre.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
             
             renderAgenda();
         }
@@ -170,23 +239,23 @@
         function renderAgenda() {
             const container = document.getElementById('moteur-agenda');
             container.innerHTML = "";
-            const couleur = { "encre": "#1c1c1e", "bleu": "#1d4ed8", "rouge": "#b91c1c" }[settings.couleurStylos];
+            const couleurEncre = { "encre": "#1c1c1e", "bleu": "#1d4ed8", "rouge": "#b91c1c" }[settings.couleurStylos];
 
             if (modeAffichage === 0) {
                 let html = "<div class='space-y-1'>";
                 for(let h=7; h<=21; h++) {
                     const rdv = evenements.filter(r => {
                         let d = new Date(r.date);
-                        return d.getDate() === dateAncre.getDate() && d.getMonth() === dateAncre.getMonth() && r.heure === h;
+                        return d.getDate() === dateAncre.getDate() && d.getMonth() === dateAncre.getMonth() && d.getFullYear() === dateAncre.getFullYear() && r.heure === h;
                     });
-                    html += `<div class="flex items-center gap-2 h-12 border-b border-black/5">
-                        <span class="text-xs opacity-40 w-10">${h}h</span>
+                    html += `<div class="flex items-center gap-2 h-11 border-b border-black/5">
+                        <span class="text-[11px] opacity-40 w-8">${h}h</span>
                         <div class="flex-1 h-full flex items-center">`;
                     if(rdv.length === 0) {
-                        html += `<button onclick="ouvrirEditeur(${h})" class="w-full h-full text-left text-black/5 text-lg">➕</button>`;
+                        html += `<button onclick="ouvrirEditeur(${h})" class="w-full h-full text-left text-black/5 text-sm flex items-center">➕</button>`;
                     } else {
                         rdv.forEach(r => {
-                            html += `<div onclick="ouvrirModif('${r.id}')" class="w-full text-xs font-bold p-2 rounded" style="background: ${couleur}15; color: ${couleur}; border-left: 4px solid ${couleur}">${r.titre}</div>`;
+                            html += `<div onclick="ouvrirModif('${r.id}')" class="w-full text-xs font-bold p-1.5 rounded" style="background: ${couleurEncre}15; color: #1c1c1e; border-left: 3px solid ${couleurEncre}">${r.titre}</div>`;
                         });
                     }
                     html += `</div></div>`;
@@ -194,13 +263,16 @@
                 container.innerHTML = html + "</div>";
             } 
             else if (modeAffichage === 1) {
-                let html = "<div class='space-y-2'>";
+                let html = "<div class='space-y-1.5'>";
                 let cal = new Date(dateAncre);
                 cal.setDate(cal.getDate() - (cal.getDay() === 0 ? 6 : cal.getDay() - 1));
                 for(let i=0; i<7; i++) {
-                    const rdv = evenements.filter(r => new Date(r.date).getDate() === cal.getDate() && new Date(r.date).getMonth() === cal.getMonth());
-                    html += `<div onclick="redirigerJour('${cal.toISOString()}')" class="p-3 rounded-xl bg-black/5 flex justify-between items-center">
-                        <span class="text-xs font-bold">${cal.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric' })}</span>
+                    const rdv = evenements.filter(r => {
+                        let d = new Date(r.date);
+                        return d.getDate() === cal.getDate() && d.getMonth() === cal.getMonth() && d.getFullYear() === cal.getFullYear();
+                    });
+                    html += `<div onclick="redirigerJour('${cal.toISOString()}')" class="p-3 rounded-lg bg-black/5 flex justify-between items-center active:bg-black/10">
+                        <span class="text-xs font-bold capitalize">${cal.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric' })}</span>
                         ${rdv.length > 0 ? `<span class="text-[10px] bg-black/10 px-2 py-0.5 rounded">${rdv.length} rdv</span>` : ''}
                     </div>`;
                     cal.setDate(cal.getDate() + 1);
@@ -216,19 +288,36 @@
                 for(let e=0; e<espaces; e++) html += `<div></div>`;
                 
                 let jours = new Date(dateAncre.getFullYear(), dateAncre.getMonth() + 1, 0).getDate();
+                let auj = new Date();
                 for(let j=1; j<=jours; j++) {
-                    let rdv = evenements.some(r => new Date(r.date).getDate() === j && new Date(r.date).getMonth() === dateAncre.getMonth());
-                    html += `<button onclick="redirigerJour('${new Date(dateAncre.getFullYear(), dateAncre.getMonth(), j).toISOString()}')" class="aspect-square rounded-lg flex flex-col items-center justify-center border border-black/5 bg-black/[0.02]">
-                        <span class="text-xs font-bold">${j}</span>
-                        <div class="w-1 h-1 rounded-full ${rdv ? 'bg-amber-600' : ''}"></div>
+                    let estAuj = auj.getDate() === j && auj.getMonth() === dateAncre.getMonth() && auj.getFullYear() === dateAncre.getFullYear();
+                    let rdv = evenements.some(r => {
+                        let d = new Date(r.date);
+                        return d.getDate() === j && d.getMonth() === dateAncre.getMonth() && d.getFullYear() === dateAncre.getFullYear();
+                    });
+                    html += `<button onclick="redirigerJour('${new Date(dateAncre.getFullYear(), dateAncre.getMonth(), j).toISOString()}')" class="aspect-square rounded-xl flex flex-col items-center justify-center p-1 border border-black/5 ${estAuj ? 'bg-amber-700 text-white font-bold' : 'bg-black/[0.02]'}" style="${estAuj ? 'background-color: #b91c1c;' : ''}">
+                        <span class="text-xs">${j}</span>
+                        <div class="w-1 h-1 rounded-full mt-0.5 ${rdv ? (estAuj ? 'bg-white' : 'bg-amber-600') : 'bg-transparent'}"></div>
                     </button>`;
                 }
                 container.innerHTML = html + "</div>";
             }
             else if (modeAffichage === 3) {
-                let html = `<div class="grid grid-cols-3 gap-2">`;
+                // CORRECTION DES ANNEES EN MINI-CALENDRIERS COMPACTS
+                let html = `<div class="grid grid-cols-2 gap-2">`;
                 for(let m=0; m<12; m++) {
-                    html += `<div onclick="redirigerMois(${m})" class="bg-black/5 p-3 rounded-xl text-center text-xs font-bold capitalize">${new Date(2026, m, 1).toLocaleDateString('fr-FR', {month: 'short'})}</div>`;
+                    let dMois = new Date(dateAncre.getFullYear(), m, 1);
+                    html += `<div onclick="redirigerMois(${m})" class="bg-black/5 p-2 rounded-xl flex flex-col">
+                        <h4 class="text-[10px] font-bold text-red-700 font-serif mb-1 capitalize text-center border-b border-black/5 pb-0.5">${dMois.toLocaleDateString('fr-FR', {month: 'long'})}</h4>
+                        <div class="grid grid-cols-7 gap-0.5 text-[7px] text-center text-black/30">`;
+                    
+                    let decal = (dMois.getDay() + 6) % 7;
+                    for(let e=0; e<decal; e++) { html += `<div></div>`; }
+                    let jInMois = new Date(dateAncre.getFullYear(), m + 1, 0).getDate();
+                    for(let j=1; j<=jInMois; j++) {
+                        html += `<div>${j}</div>`;
+                    }
+                    html += `</div></div>`;
                 }
                 container.innerHTML = html + "</div>";
             }
@@ -262,24 +351,45 @@
                 let h = parseInt(document.getElementById('modale-editeur').dataset.heure);
                 evenements.push({ id: 'id_'+Date.now(), date: dateAncre.toISOString(), heure: h, titre: t });
             }
-            localStorage.setItem('moleskine_events', JSON.stringify(evenements));
+            localStorage.setItem('events_iphone', JSON.stringify(evenements));
             fermerEditeur(); syncUI();
         }
         function supprimerRDV() {
             evenements = evenements.filter(x => x.id !== targetRdvId);
-            localStorage.setItem('moleskine_events', JSON.stringify(evenements));
+            localStorage.setItem('events_iphone', JSON.stringify(evenements));
             fermerEditeur(); syncUI();
         }
 
-        // --- GESTES DE BALAYAGE (SWIPE) POUR L'AGENDA ---
+        // --- GESTES DE GLISSEMENT EXCLUSIFS (SWIPE) ---
         let startX = 0;
-        document.addEventListener('touchstart', e => { if(e.target.id !== 'zone-notes') startX = e.touches[0].clientX; }, {passive:true});
+        let startY = 0;
+
+        document.addEventListener('touchstart', e => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        }, {passive:true});
+
         document.addEventListener('touchend', e => {
-            if(e.target.id === 'zone-notes') return;
-            let diff = e.changedTouches[0].clientX - startX;
-            if(Math.abs(diff) > 50) {
-                if(diff > 0) naviguerDate(-1); // Swipe à droite -> Avant
-                else naviguerDate(1);  // Swipe à gauche -> Après
+            let diffX = e.changedTouches[0].clientX - startX;
+            let diffY = e.changedTouches[0].clientY - startY;
+
+            // On vérifie que le geste est horizontal et pas un défilement vertical
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 60) {
+                if (diffX < 0) {
+                    // Glissement vers la gauche : ouvre les notes OU avance dans le calendrier
+                    if (!notesOuvertes && e.target.id !== 'zone-notes') {
+                        ouvrirNotes();
+                    } else if (!notesOuvertes) {
+                        naviguerDate(1);
+                    }
+                } else {
+                    // Glissement vers la droite : ferme les notes OU recule dans le calendrier
+                    if (notesOuvertes) {
+                        fermerNotes();
+                    } else if (e.target.id !== 'zone-notes') {
+                        naviguerDate(-1);
+                    }
+                }
             }
         }, {passive:true});
 
