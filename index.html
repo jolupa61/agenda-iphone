@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <!-- Indication pour iOS d'éviter la rotation si ajouté sur l'écran d'accueil -->
     <meta name="apple-mobile-web-app-orientations" content="portrait">
     
     <link class="apple-touch-icon" rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/510/ffffff/journal.png">
@@ -17,12 +16,11 @@
         .font-manuscrit { font-family: "Chalkboard SE", "Comic Sans MS", sans-serif; }
         .font-classique { font-family: "Times New Roman", Georgia, serif; }
         .font-moderne { font-family: system-ui, sans-serif; }
-        .papier-ligne { background-image: linear-gradient(#c6c6c8 1px, transparent 1px); background-size: 100% 28px; line-height: 28px; }
-        .papier-quadrille { background-image: linear-gradient(rgba(198,198,200,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(198,198,200,0.3) 1px, transparent 1px); background-size: 20px 20px; }
+        .papier-ligne { background-image: linear-gradient(#c6c6c8 1px, transparent 1px); background-size: 100% 32px; line-height: 32px; }
+        .papier-quadrille { background-image: linear-gradient(rgba(198,198,200,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(198,198,200,0.3) 1px, transparent 1px); background-size: 24px 24px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Forcer le mode portrait visuellement même si l'appareil tourne */
         @media screen and (orientation: landscape) {
             #bloqueur-orientation { display: flex !important; }
         }
@@ -44,10 +42,10 @@
             <div class="absolute left-0 top-0 bottom-0 w-4 bg-black/30 rounded-l-2xl border-r border-black/10"></div>
             <div class="mt-12 flex flex-col items-center gap-4">
                 <span class="text-4xl">📔</span>
-                <h1 class="text-2xl font-serif tracking-[0.3em] font-bold">AGENDA</h1>
+                <h1 class="text-3xl font-serif tracking-[0.3em] font-bold">AGENDA</h1>
             </div>
-            <div class="bg-white/5 text-white/60 text-[10px] font-semibold tracking-wider uppercase px-4 py-2 rounded-xl border border-white/10 mb-4">
-                Ouvrir
+            <div class="bg-white/5 text-white/60 text-xs font-semibold tracking-wider uppercase px-6 py-3 rounded-xl border border-white/10 mb-4">
+                Ouvrir le carnet
             </div>
         </button>
     </div>
@@ -57,96 +55,132 @@
         
         <!-- BARRE OUTILS -->
         <header class="h-12 shrink-0 flex justify-between items-center px-4 text-white z-10">
-            <button onclick="fermerCarnet()" class="text-xs bg-white/10 px-3 py-1.5 rounded-lg">📁 Fermer</button>
-            <div class="flex gap-3">
-                <button onclick="setStylo('encre')" class="w-5 h-5 rounded-full bg-[#1c1c1e] border border-white shadow" id="btn-stylo-encre"></button>
-                <button onclick="setStylo('bleu')" class="w-5 h-5 rounded-full bg-[#1d4ed8]" id="btn-stylo-bleu"></button>
-                <button onclick="setStylo('rouge')" class="w-5 h-5 rounded-full bg-[#b91c1c]" id="btn-stylo-rouge"></button>
+            <button onclick="fermerCarnet()" class="text-sm bg-white/10 px-3 py-1.5 rounded-lg">📁 Fermer</button>
+            <div class="flex gap-4">
+                <button onclick="setStylo('encre')" class="w-6 h-6 rounded-full bg-[#1c1c1e] border-2 border-white shadow" id="btn-stylo-encre"></button>
+                <button onclick="setStylo('bleu')" class="w-6 h-6 rounded-full bg-[#1d4ed8]" id="btn-stylo-bleu"></button>
+                <button onclick="setStylo('rouge')" class="w-6 h-6 rounded-full bg-[#b91c1c]" id="btn-stylo-rouge"></button>
             </div>
-            <button onclick="ouvrirReglages()" class="text-xl p-1">⚙️</button>
+            <button onclick="ouvrirReglages()" class="text-2xl p-1">⚙️</button>
         </header>
 
         <!-- PAGE PRINCIPALE : L'AGENDA -->
         <main class="flex-1 flex flex-col m-2 rounded-xl shadow-xl overflow-hidden relative" id="page-gauche" style="background-color: #faf9f5;">
-            <div class="p-3 shrink-0 border-b border-black/5">
-                <div class="flex justify-between items-center mb-2">
+            <div class="p-4 shrink-0 border-b border-black/5">
+                <div class="flex justify-between items-center mb-3">
                     <div class="flex items-center gap-2">
-                        <h2 class="text-sm font-bold font-serif uppercase tracking-wider" id="label-date-ancre">Jeudi 25 Juin 2026</h2>
-                        <button onclick="allerAujourdhui()" id="btn-today" class="hidden text-[8px] bg-red-600 text-white font-bold px-1.5 py-0.5 rounded-full">AUJ</button>
+                        <h2 class="text-base font-bold font-serif uppercase tracking-wider" id="label-date-ancre">Jeudi 25 Juin 2026</h2>
+                        <button onclick="allerAujourdhui()" id="btn-today" class="hidden text-[10px] bg-red-600 text-white font-bold px-2 py-0.5 rounded-full">AUJ</button>
                     </div>
-                    <div class="flex gap-4 text-sm font-bold">
-                        <button onclick="naviguerDate(-1)" class="px-2 py-0.5">◀</button>
-                        <button onclick="naviguerDate(1)" class="px-2 py-0.5">▶</button>
+                    <div class="flex gap-5 text-base font-bold">
+                        <button onclick="naviguerDate(-1)" class="px-2 py-1">◀</button>
+                        <button onclick="naviguerDate(1)" class="px-2 py-1">▶</button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-4 gap-1 p-0.5 bg-black/5 rounded-lg text-center text-[11px] font-semibold">
-                    <button onclick="setMode(0)" id="btn-mode-0" class="py-1 rounded-md text-gray-500">Jour</button>
-                    <button onclick="setMode(1)" id="btn-mode-1" class="py-1 rounded-md text-gray-500">Sem.</button>
-                    <button onclick="setMode(2)" id="btn-mode-2" class="py-1 rounded-md text-gray-500">Mois</button>
-                    <button onclick="setMode(3)" id="btn-mode-3" class="py-1 rounded-md text-gray-500">Année</button>
+                <div class="grid grid-cols-4 gap-1 p-1 bg-black/5 rounded-lg text-center text-xs font-bold">
+                    <button onclick="setMode(0)" id="btn-mode-0" class="py-2 rounded-md text-gray-500">Jour</button>
+                    <button onclick="setMode(1)" id="btn-mode-1" class="py-2 rounded-md text-gray-500">Sem.</button>
+                    <button onclick="setMode(2)" id="btn-mode-2" class="py-2 rounded-md text-gray-500">Mois</button>
+                    <button onclick="setMode(3)" id="btn-mode-3" class="py-2 rounded-md text-gray-500">Année</button>
                 </div>
             </div>
 
             <!-- Contenu de l'agenda -->
-            <div id="moteur-agenda" class="flex-1 overflow-y-auto p-3 no-scrollbar"></div>
+            <div id="moteur-agenda" class="flex-1 overflow-y-auto p-4 no-scrollbar"></div>
             
-            <!-- Indication discrète de glissement pour les notes -->
-            <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-12 bg-amber-600/30 rounded-l-md"></div>
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-16 bg-amber-600/30 rounded-l-md"></div>
         </main>
 
-        <!-- VOLET GLISSANT : LES NOTES (S'ouvre par SWIPE vers la gauche) -->
-        <div id="volet-notes" class="absolute top-12 bottom-2 right-0 w-[90%] z-40 translate-x-full flex shadow-2xl">
+        <!-- VOLET GLISSANT : LES NOTES (SWIPE) -->
+        <div id="volet-notes" class="absolute top-12 bottom-2 right-0 w-[92%] z-40 translate-x-full flex shadow-2xl">
             <div class="flex-1 rounded-l-xl p-4 flex flex-col border-l border-black/10" id="page-droite" style="background-color: #faf9f5;">
-                <div class="flex justify-between items-center mb-2 border-b border-black/5 pb-1">
-                    <h3 class="text-xs italic font-serif opacity-50">Notes Volantes</h3>
-                    <button onclick="fermerNotes()" class="text-xs font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">Glisser ➔</button>
+                <div class="flex justify-between items-center mb-3 border-b border-black/5 pb-1">
+                    <h3 class="text-sm italic font-serif opacity-50">Notes Volantes</h3>
+                    <button onclick="fermerNotes()" class="text-xs font-bold text-amber-800 bg-amber-100 px-3 py-1 rounded-lg">Glisser ➔</button>
                 </div>
-                <div class="flex-1 relative rounded-lg overflow-hidden" id="box-fond-papier">
-                    <textarea id="zone-notes" oninput="sauverNotes()" class="w-full h-full bg-transparent resize-none border-none outline-none focus:ring-0 p-1 text-sm" placeholder="Écrivez vos notes ici..."></textarea>
+                <div class="flex-1 relative rounded-lg overflow-hidden p-1" id="box-fond-papier">
+                    <textarea id="zone-notes" oninput="sauverNotes()" class="w-full h-full bg-transparent resize-none border-none outline-none focus:ring-0 p-1 text-base" placeholder="Écrivez vos notes ici..."></textarea>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- MODALE RDV -->
-    <div id="modale-editeur" class="fixed inset-0 bg-black/60 z-50 hidden flex items-end justify-center p-4">
-        <div class="bg-[#1c1c1e] text-white w-full rounded-2xl p-5 space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center">
-                <h4 class="font-bold text-sm">Événement</h4>
-                <button onclick="fermerEditeur()" class="text-blue-400 text-sm">Annuler</button>
-            </div>
-            <input type="text" id="form-titre" placeholder="Titre" class="w-full bg-[#2c2c2e] px-3 py-2 rounded-lg text-sm outline-none">
-            <div class="flex gap-2">
-                <button onclick="supprimerRDV()" id="btn-supprimer-rdv" class="bg-red-600 px-4 rounded-xl text-sm hidden">🗑️</button>
-                <button onclick="validerRDV()" class="flex-1 bg-blue-600 py-2.5 rounded-xl font-bold text-sm">Enregistrer</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODALE RÉGLAGES -->
-    <div id="modale-reglages" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-[#1c1c1e] text-white w-full max-w-xs rounded-2xl p-4 space-y-3 text-sm">
+    <!-- MODALE RDV COMPLÈTE -->
+    <div id="modale-editeur" class="fixed inset-0 bg-black/60 z-50 hidden flex items-end justify-center p-4 backdrop-blur-xs">
+        <div class="bg-[#1c1c1e] text-white w-full rounded-2xl p-5 space-y-4 shadow-2xl border border-white/10">
             <div class="flex justify-between items-center border-b border-white/10 pb-2">
-                <h3 class="font-bold">Réglages</h3>
+                <h4 id="editeur-titre-mode" class="font-bold text-base">Événement</h4>
+                <button onclick="fermerEditeur()" class="text-blue-400 text-sm font-medium">Annuler</button>
+            </div>
+            <div class="space-y-3">
+                <input type="text" id="form-titre" placeholder="Titre" class="w-full bg-[#2c2c2e] px-3 py-2.5 rounded-lg text-sm outline-none">
+                <input type="text" id="form-lieu" placeholder="Lieu (Optionnel)" class="w-full bg-[#2c2c2e] px-3 py-2.5 rounded-lg text-sm outline-none">
+                
+                <div class="flex gap-4">
+                    <div class="w-1/2">
+                        <label class="text-xs text-gray-400 block mb-1">Heure Début</label>
+                        <input type="time" id="form-debut" class="bg-[#2c2c2e] px-3 py-2 rounded-lg text-sm w-full outline-none">
+                    </div>
+                    <div class="w-1/2">
+                        <label class="text-xs text-gray-400 block mb-1">Heure Fin</label>
+                        <input type="time" id="form-fin" class="bg-[#2c2c2e] px-3 py-2 rounded-lg text-sm w-full outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">Catégorie</label>
+                    <div class="flex flex-wrap gap-1.5" id="form-cats">
+                        <button onclick="setFormCat('Pro')" id="cat-Pro" class="px-3 py-1.5 rounded-full text-xs font-bold border">Pro</button>
+                        <button onclick="setFormCat('Perso')" id="cat-Perso" class="px-3 py-1.5 rounded-full text-xs font-bold border">Perso</button>
+                        <button onclick="setFormCat('Loisir')" id="cat-Loisir" class="px-3 py-1.5 rounded-full text-xs font-bold border">Loisir</button>
+                        <button onclick="setFormCat('Médical')" id="cat-Médical" class="px-3 py-1.5 rounded-full text-xs font-bold border">Médical</button>
+                        <button onclick="setFormCat('Important')" id="cat-Important" class="px-3 py-1.5 rounded-full text-xs font-bold border">Important</button>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-2 flex gap-2">
+                <button onclick="supprimerRDV()" id="btn-supprimer-rdv" class="hidden bg-red-600 hover:bg-red-700 py-2.5 px-4 rounded-xl font-medium text-sm">🗑️</button>
+                <button onclick="validerRDV()" class="flex-1 bg-blue-600 hover:bg-blue-700 py-2.5 rounded-xl font-bold text-sm text-center">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE RÉGLAGES ET SAUVEGARDE (KDRIVE / FICHIERS) -->
+    <div id="modale-reglages" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[#1c1c1e] text-white w-full max-w-xs rounded-2xl p-4 space-y-4 text-sm border border-white/10">
+            <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                <h3 class="font-bold text-base">Réglages</h3>
                 <button onclick="fermerReglages()" class="text-blue-400 font-bold">OK</button>
             </div>
-            <div class="space-y-1">
-                <label class="text-[10px] text-gray-400 font-semibold uppercase">Le Papier</label>
-                <select id="reg-papier" onchange="changeReglage('stylePapier', this.value)" class="w-full bg-[#2c2c2e] p-1.5 rounded-lg text-xs outline-none">
-                    <option value="ligné">📝 Ligné</option>
-                    <option value="quadrillé">🔲 Carré</option>
-                    <option value="blanc">📄 Blanc</option>
-                </select>
+            <div class="space-y-2">
+                <div class="space-y-1">
+                    <label class="text-[10px] text-gray-400 font-semibold uppercase">Le Papier</label>
+                    <select id="reg-papier" onchange="changeRegrage('stylePapier', this.value)" class="w-full bg-[#2c2c2e] p-2 rounded-lg text-xs outline-none">
+                        <option value="ligné">📝 Ligné</option>
+                        <option value="quadrillé">🔲 Carré</option>
+                        <option value="blanc">📄 Blanc</option>
+                    </select>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-gray-400 font-semibold uppercase">Écriture</label>
+                    <select id="reg-police" onchange="changeRegrage('stylePoliceNotes', this.value)" class="w-full bg-[#2c2c2e] p-2 rounded-lg text-xs outline-none">
+                        <option value="manuscrit">✍️ Main</option>
+                        <option value="classique">📜 Classique</option>
+                        <option value="moderne">📱 Digitale</option>
+                    </select>
+                </div>
             </div>
-            <div class="space-y-1">
-                <label class="text-[10px] text-gray-400 font-semibold uppercase">Écriture</label>
-                <select id="reg-police" onchange="changeRegrage('stylePoliceNotes', this.value)" class="w-full bg-[#2c2c2e] p-1.5 rounded-lg text-xs outline-none">
-                    <option value="manuscrit">✍️ Main</option>
-                    <option value="classique">📜 Classique</option>
-                    <option value="moderne">📱 Digitale</option>
-                </select>
+            
+            <!-- SECTION DE SAUVEGARDE POUR KDRIVE / DOSSIER IPHONE -->
+            <div class="pt-3 border-t border-white/10 space-y-2">
+                <label class="text-[10px] text-gray-400 font-semibold uppercase block">Sauvegarde (kDrive / Fichiers)</label>
+                <button onclick="exporterJSON()" class="w-full bg-indigo-600/30 text-indigo-400 border border-indigo-500/30 py-2 rounded-lg text-xs font-medium">Exporter vers Fichiers (JSON)</button>
+                <label class="w-full bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 py-2 rounded-lg text-xs font-medium block text-center cursor-pointer">
+                    Importer depuis Fichiers (JSON)
+                    <input type="file" accept=".json" class="hidden" onchange="importerJSON(this)">
+                </label>
             </div>
         </div>
     </div>
@@ -160,8 +194,11 @@
         let evenements = JSON.parse(localStorage.getItem('events_iphone')) || [];
         let modeAffichage = 2; 
         let dateAncre = new Date();
+        let selectedFormCat = "Pro";
         let targetRdvId = null;
         let notesOuvertes = false;
+
+        const couleursCats = { "Pro": "#3b82f6", "Perso": "#22c55e", "Loisir": "#f97316", "Médical": "#a855f7", "Important": "#ef4444" };
 
         function ouvrirCarnet() {
             document.getElementById('vue-couverture').classList.add('hidden');
@@ -186,7 +223,7 @@
         function ouvrirReglages() { document.getElementById('modale-reglages').style.display = "flex"; }
         function fermerReglages() { document.getElementById('modale-reglages').style.display = "none"; }
         
-        function changeReglage(cle, valeur) {
+        function changeRegrage(cle, valeur) {
             settings[cle] = valeur;
             localStorage.setItem('iphone_' + cle, valeur);
             syncUI();
@@ -199,7 +236,7 @@
         function setMode(m) {
             modeAffichage = m;
             for(let i=0; i<4; i++) {
-                document.getElementById(`btn-mode-${i}`).className = i === m ? "py-1 rounded-md bg-white shadow-sm font-bold text-black" : "py-1 rounded-md text-gray-500";
+                document.getElementById(`btn-mode-${i}`).className = i === m ? "py-2 rounded-md bg-white shadow-sm font-bold text-black" : "py-2 rounded-md text-gray-500";
             }
             renderAgenda();
         }
@@ -223,7 +260,7 @@
             let fontClass = "font-manuscrit";
             if(settings.stylePoliceNotes === 'classique') fontClass = "font-classique";
             else if(settings.stylePoliceNotes === 'moderne') fontClass = "font-moderne";
-            document.getElementById('zone-notes').className = `w-full h-full bg-transparent resize-none border-none outline-none focus:ring-0 p-1 ${fontClass}`;
+            document.getElementById('zone-notes').className = `w-full h-full bg-transparent resize-none border-none outline-none focus:ring-0 p-2 ${fontClass} text-base`;
 
             document.getElementById('reg-papier').value = settings.stylePapier;
             document.getElementById('reg-police').value = settings.stylePoliceNotes;
@@ -242,20 +279,20 @@
             const couleurEncre = { "encre": "#1c1c1e", "bleu": "#1d4ed8", "rouge": "#b91c1c" }[settings.couleurStylos];
 
             if (modeAffichage === 0) {
-                let html = "<div class='space-y-1'>";
+                let html = "<div class='space-y-1.5'>";
                 for(let h=7; h<=21; h++) {
                     const rdv = evenements.filter(r => {
                         let d = new Date(r.date);
-                        return d.getDate() === dateAncre.getDate() && d.getMonth() === dateAncre.getMonth() && d.getFullYear() === dateAncre.getFullYear() && r.heure === h;
+                        return d.getDate() === dateAncre.getDate() && d.getMonth() === dateAncre.getMonth() && d.getFullYear() === dateAncre.getFullYear() && r.heureDebut === h;
                     });
-                    html += `<div class="flex items-center gap-2 h-11 border-b border-black/5">
-                        <span class="text-[11px] opacity-40 w-8">${h}h</span>
+                    html += `<div class="flex items-center gap-3 h-14 border-b border-black/5">
+                        <span class="text-sm font-bold opacity-40 w-10">${String(h).padStart(2, '0')}h</span>
                         <div class="flex-1 h-full flex items-center">`;
                     if(rdv.length === 0) {
-                        html += `<button onclick="ouvrirEditeur(${h})" class="w-full h-full text-left text-black/5 text-sm flex items-center">➕</button>`;
+                        html += `<button onclick="ouvrirEditeur(${h})" class="w-full h-full text-left text-black/5 text-base flex items-center">➕</button>`;
                     } else {
                         rdv.forEach(r => {
-                            html += `<div onclick="ouvrirModif('${r.id}')" class="w-full text-xs font-bold p-1.5 rounded" style="background: ${couleurEncre}15; color: #1c1c1e; border-left: 3px solid ${couleurEncre}">${r.titre}</div>`;
+                            html += `<div onclick="ouvrirModif('${r.id}')" class="w-full text-sm font-bold p-2 rounded" style="background: ${couleursCats[r.categorie]}15; color: #1c1c1e; border-left: 4px solid ${couleursCats[r.categorie]}">${r.titre}</div>`;
                         });
                     }
                     html += `</div></div>`;
@@ -263,7 +300,7 @@
                 container.innerHTML = html + "</div>";
             } 
             else if (modeAffichage === 1) {
-                let html = "<div class='space-y-1.5'>";
+                let html = "<div class='space-y-2'>";
                 let cal = new Date(dateAncre);
                 cal.setDate(cal.getDate() - (cal.getDay() === 0 ? 6 : cal.getDay() - 1));
                 for(let i=0; i<7; i++) {
@@ -271,17 +308,17 @@
                         let d = new Date(r.date);
                         return d.getDate() === cal.getDate() && d.getMonth() === cal.getMonth() && d.getFullYear() === cal.getFullYear();
                     });
-                    html += `<div onclick="redirigerJour('${cal.toISOString()}')" class="p-3 rounded-lg bg-black/5 flex justify-between items-center active:bg-black/10">
-                        <span class="text-xs font-bold capitalize">${cal.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric' })}</span>
-                        ${rdv.length > 0 ? `<span class="text-[10px] bg-black/10 px-2 py-0.5 rounded">${rdv.length} rdv</span>` : ''}
+                    html += `<div onclick="redirigerJour('${cal.toISOString()}')" class="p-4 rounded-xl bg-black/5 flex justify-between items-center active:bg-black/10">
+                        <span class="text-sm font-bold capitalize">${cal.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric' })}</span>
+                        ${rdv.length > 0 ? `<span class="text-xs font-bold bg-black/10 px-2.5 py-1 rounded-md">${rdv.length} rdv</span>` : ''}
                     </div>`;
                     cal.setDate(cal.getDate() + 1);
                 }
                 container.innerHTML = html + "</div>";
             }
             else if (modeAffichage === 2) {
-                let html = `<div class="grid grid-cols-7 gap-1 text-center">`;
-                ["L","M","M","J","V","S","D"].forEach(l => html += `<div class="text-[10px] font-bold opacity-40 py-1">${l}</div>`);
+                let html = `<div class="grid grid-cols-7 gap-1.5 text-center">`;
+                ["L","M","M","J","V","S","D"].forEach(l => html += `<div class="text-xs font-bold opacity-40 py-1">${l}</div>`);
                 
                 let premier = new Date(dateAncre.getFullYear(), dateAncre.getMonth(), 1);
                 let espaces = premier.getDay() === 0 ? 6 : premier.getDay() - 1;
@@ -295,21 +332,20 @@
                         let d = new Date(r.date);
                         return d.getDate() === j && d.getMonth() === dateAncre.getMonth() && d.getFullYear() === dateAncre.getFullYear();
                     });
-                    html += `<button onclick="redirigerJour('${new Date(dateAncre.getFullYear(), dateAncre.getMonth(), j).toISOString()}')" class="aspect-square rounded-xl flex flex-col items-center justify-center p-1 border border-black/5 ${estAuj ? 'bg-amber-700 text-white font-bold' : 'bg-black/[0.02]'}" style="${estAuj ? 'background-color: #b91c1c;' : ''}">
-                        <span class="text-xs">${j}</span>
-                        <div class="w-1 h-1 rounded-full mt-0.5 ${rdv ? (estAuj ? 'bg-white' : 'bg-amber-600') : 'bg-transparent'}"></div>
+                    html += `<button onclick="redirigerJour('${new Date(dateAncre.getFullYear(), dateAncre.getMonth(), j).toISOString()}')" class="aspect-square rounded-xl flex flex-col items-center justify-center p-1 border border-black/5 ${estAuj ? 'text-white font-bold' : 'bg-black/[0.02]'}" style="${estAuj ? 'background-color: #b91c1c;' : ''}">
+                        <span class="text-sm">${j}</span>
+                        <div class="w-1.5 h-1.5 rounded-full mt-0.5 ${rdv ? (estAuj ? 'bg-white' : 'bg-amber-600') : 'bg-transparent'}"></div>
                     </button>`;
                 }
                 container.innerHTML = html + "</div>";
             }
             else if (modeAffichage === 3) {
-                // CORRECTION DES ANNEES EN MINI-CALENDRIERS COMPACTS
                 let html = `<div class="grid grid-cols-2 gap-2">`;
                 for(let m=0; m<12; m++) {
                     let dMois = new Date(dateAncre.getFullYear(), m, 1);
                     html += `<div onclick="redirigerMois(${m})" class="bg-black/5 p-2 rounded-xl flex flex-col">
-                        <h4 class="text-[10px] font-bold text-red-700 font-serif mb-1 capitalize text-center border-b border-black/5 pb-0.5">${dMois.toLocaleDateString('fr-FR', {month: 'long'})}</h4>
-                        <div class="grid grid-cols-7 gap-0.5 text-[7px] text-center text-black/30">`;
+                        <h4 class="text-xs font-bold text-red-700 font-serif mb-1 capitalize text-center border-b border-black/5 pb-0.5">${dMois.toLocaleDateString('fr-FR', {month: 'long'})}</h4>
+                        <div class="grid grid-cols-7 gap-0.5 text-[8px] text-center text-black/30">`;
                     
                     let decal = (dMois.getDay() + 6) % 7;
                     for(let e=0; e<decal; e++) { html += `<div></div>`; }
@@ -326,30 +362,68 @@
         function redirigerJour(iso) { dateAncre = new Date(iso); setMode(0); syncUI(); }
         function redirigerMois(m) { dateAncre.setMonth(m); setMode(2); syncUI(); }
 
-        function ouvrirEditeur(h) {
+        function ouvrirEditeur(heure) {
             targetRdvId = null;
+            document.getElementById('editeur-titre-mode').innerText = "Nouvel Événement";
             document.getElementById('form-titre').value = "";
+            document.getElementById('form-lieu').value = "";
+            document.getElementById('form-debut').value = `${String(heure).padStart(2,'0')}:00`;
+            document.getElementById('form-fin').value = `${String(heure+1).padStart(2,'0')}:00`;
             document.getElementById('btn-supprimer-rdv').classList.add('hidden');
+            setFormCat('Pro');
             document.getElementById('modale-editeur').style.display = "flex";
-            document.getElementById('modale-editeur').dataset.heure = h;
         }
         function ouvrirModif(id) {
             targetRdvId = id;
             let r = evenements.find(x => x.id === id);
+            document.getElementById('editeur-titre-mode').innerText = "Modifier l'Événement";
             document.getElementById('form-titre').value = r.titre;
+            document.getElementById('form-lieu').value = r.lieu || "";
+            document.getElementById('form-debut').value = `${String(r.heureDebut).padStart(2,'0')}:${String(r.minuteDebut).padStart(2,'0')}`;
+            document.getElementById('form-fin').value = `${String(r.heureFin).padStart(2,'0')}:${String(r.minuteFin).padStart(2,'0')}`;
             document.getElementById('btn-supprimer-rdv').classList.remove('hidden');
+            setFormCat(r.categorie || 'Pro');
             document.getElementById('modale-editeur').style.display = "flex";
         }
         function fermerEditeur() { document.getElementById('modale-editeur').style.display = "none"; }
 
+        function setFormCat(cat) {
+            selectedFormCat = cat;
+            ["Pro", "Perso", "Loisir", "Médical", "Important"].forEach(c => {
+                const btn = document.getElementById(`cat-${c}`);
+                if(c === cat) {
+                    btn.className = `px-3 py-1.5 rounded-full text-xs font-bold border text-white`;
+                    btn.style.backgroundColor = couleursCats[c];
+                    btn.style.borderColor = couleursCats[c];
+                } else {
+                    btn.className = `px-3 py-1.5 rounded-full text-xs font-bold border`;
+                    btn.style.backgroundColor = "transparent";
+                    btn.style.borderColor = couleursCats[c];
+                    btn.style.color = couleursCats[c];
+                }
+            });
+        }
+
         function validerRDV() {
-            let t = document.getElementById('form-titre').value.trim() || "Sans titre";
+            const titre = document.getElementById('form-titre').value.trim() || "Sans Titre";
+            const lieu = document.getElementById('form-lieu').value.trim();
+            const tDebut = document.getElementById('form-debut').value.split(':');
+            const tFin = document.getElementById('form-fin').value.split(':');
+            const hDeb = parseInt(tDebut[0]) || 9, mDeb = parseInt(tDebut[1]) || 0;
+            const hFin = parseInt(tFin[0]) || 10, mFin = parseInt(tFin[1]) || 0;
+
             if(targetRdvId) {
-                let r = evenements.find(x => x.id === targetRdvId);
-                if(r) r.titre = t;
+                let match = evenements.find(x => x.id === targetRdvId);
+                if(match) {
+                    match.titre = titre; match.lieu = lieu; match.categorie = selectedFormCat;
+                    match.heureDebut = hDeb; match.minuteDebut = mDeb; match.heureFin = hFin; match.minuteFin = mFin;
+                }
             } else {
-                let h = parseInt(document.getElementById('modale-editeur').dataset.heure);
-                evenements.push({ id: 'id_'+Date.now(), date: dateAncre.toISOString(), heure: h, titre: t });
+                evenements.push({
+                    id: 'id_' + Date.now(), date: dateAncre.toISOString(),
+                    heureDebut: hDeb, minuteDebut: mDeb, heureFin: hFin, minuteFin: mFin,
+                    titre, lieu, categorie: selectedFormCat
+                });
             }
             localStorage.setItem('events_iphone', JSON.stringify(evenements));
             fermerEditeur(); syncUI();
@@ -360,41 +434,33 @@
             fermerEditeur(); syncUI();
         }
 
-        // --- GESTES DE GLISSEMENT EXCLUSIFS (SWIPE) ---
-        let startX = 0;
-        let startY = 0;
+        // BACKUP & EXPORT KDRIVE / FICHIERS
+        function exporterJSON() {
+            const packageGlobal = { evenements, notes: localStorage.getItem('notes_iphone') || '' };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(packageGlobal, null, 2));
+            const dl = document.createElement('a');
+            dl.setAttribute("href", dataStr);
+            dl.setAttribute("download", "agenda_iphone_backup.json");
+            document.body.appendChild(dl); dl.click(); dl.remove();
+        }
+        function importerJSON(input) {
+            const file = input.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    if (backup.evenements) evenements = backup.evenements;
+                    if (backup.notes) localStorage.setItem('notes_iphone', backup.notes);
+                    localStorage.setItem('events_iphone', JSON.stringify(evenements));
+                    syncUI(); alert("Importation réussie ✓"); fermerReglages();
+                } catch(err) { alert("Fichier JSON invalide."); }
+            };
+            reader.readAsText(file);
+        }
 
-        document.addEventListener('touchstart', e => {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-        }, {passive:true});
-
+        // --- GESTES DE GLISSEMENT ---
+        let startX = 0; let startY = 0;
+        document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }, {passive:true});
         document.addEventListener('touchend', e => {
             let diffX = e.changedTouches[0].clientX - startX;
-            let diffY = e.changedTouches[0].clientY - startY;
-
-            // On vérifie que le geste est horizontal et pas un défilement vertical
-            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 60) {
-                if (diffX < 0) {
-                    // Glissement vers la gauche : ouvre les notes OU avance dans le calendrier
-                    if (!notesOuvertes && e.target.id !== 'zone-notes') {
-                        ouvrirNotes();
-                    } else if (!notesOuvertes) {
-                        naviguerDate(1);
-                    }
-                } else {
-                    // Glissement vers la droite : ferme les notes OU recule dans le calendrier
-                    if (notesOuvertes) {
-                        fermerNotes();
-                    } else if (e.target.id !== 'zone-notes') {
-                        naviguerDate(-1);
-                    }
-                }
-            }
-        }, {passive:true});
-
-        setMode(2);
-        syncUI();
-    </script>
-</body>
-</html>
+            let diffY = e.changedTouches[0].clientY -Normally I can help with things like this, but I don't seem to have access to that content. You can try again or ask me for something else.
