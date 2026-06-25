@@ -30,13 +30,11 @@
 </head>
 <body class="bg-[#242426] text-black antialiased flex flex-col h-full overflow-hidden pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
 
-    <!-- ÉCRAN EN CAS DE ROTATION ACCIDENTELLE -->
     <div id="bloqueur-orientation" class="fixed inset-0 bg-[#242426] text-white z-50 hidden flex-col items-center justify-center p-6 text-center">
         <span class="text-4xl mb-4">📱</span>
         <p class="font-serif text-lg">Merci de remettre votre iPhone en mode Portrait.</p>
     </div>
 
-    <!-- COUVERTURE FERMÉE (Modifiée en DIV + Double événement Clic/Touch pour iPhone) -->
     <div id="vue-couverture" class="fixed inset-0 flex items-center justify-center p-6 z-50 bg-[#242426]">
         <div onclick="ouvrirCarnet()" ontouchstart="ouvrirCarnet()" class="w-full max-w-xs aspect-[3/4] rounded-2xl relative shadow-2xl flex flex-col items-center justify-between p-8 text-center bg-[#141416] text-[#ccaa66] cursor-pointer select-none" id="cuir-couverture">
             <div class="absolute left-0 top-0 bottom-0 w-4 bg-black/30 rounded-l-2xl border-r border-black/10"></div>
@@ -50,54 +48,49 @@
         </div>
     </div>
 
-    <!-- CARNET OUVERT -->
     <div id="vue-interieur" class="hidden flex-1 flex flex-col overflow-hidden relative">
         
-        <!-- BARRE OUTILS -->
-        <header class="h-12 shrink-0 flex justify-between items-center px-4 text-white z-10">
-            <button onclick="fermerCarnet()" ontouchstart="fermerCarnet()" class="text-sm bg-white/10 px-3 py-1.5 rounded-lg">📁 Fermer</button>
+        <header class="h-12 shrink-0 flex justify-between items-center px-4 text-white z-20 relative">
+            <button onclick="fermerCarnet()" ontouchstart="fermerCarnet()" class="text-sm bg-white/10 px-3 py-1.5 rounded-lg active:scale-95 transition-transform">📁 Fermer</button>
             <div class="flex gap-4">
-                <button onclick="setStylo('encre')" class="w-6 h-6 rounded-full bg-[#1c1c1e] border-2 border-white shadow" id="btn-stylo-encre"></button>
-                <button onclick="setStylo('bleu')" class="w-6 h-6 rounded-full bg-[#1d4ed8]" id="btn-stylo-bleu"></button>
-                <button onclick="setStylo('rouge')" class="w-6 h-6 rounded-full bg-[#b91c1c]" id="btn-stylo-rouge"></button>
+                <button onclick="setStylo('encre')" ontouchstart="setStylo('encre')" class="w-6 h-6 rounded-full bg-[#1c1c1e] border-2 border-white shadow" id="btn-stylo-encre"></button>
+                <button onclick="setStylo('bleu')" ontouchstart="setStylo('bleu')" class="w-6 h-6 rounded-full bg-[#1d4ed8]" id="btn-stylo-bleu"></button>
+                <button onclick="setStylo('rouge')" ontouchstart="setStylo('rouge')" class="w-6 h-6 rounded-full bg-[#b91c1c]" id="btn-stylo-rouge"></button>
             </div>
-            <button onclick="ouvrirReglages()" class="text-2xl p-1">⚙️</button>
+            <button onclick="ouvrirReglages()" ontouchstart="ouvrirReglages(event)" class="text-2xl p-2 active:scale-95 transition-transform" style="position: relative; z-index: 30;">⚙️</button>
         </header>
 
-        <!-- PAGE PRINCIPALE : L'AGENDA -->
-        <main class="flex-1 flex flex-col m-2 rounded-xl shadow-xl overflow-hidden relative" id="page-gauche" style="background-color: #faf9f5;">
+        <main class="flex-1 flex flex-col m-2 rounded-xl shadow-xl overflow-hidden relative z-10" id="page-gauche" style="background-color: #faf9f5;">
             <div class="p-4 shrink-0 border-b border-black/5">
                 <div class="flex justify-between items-center mb-3">
                     <div class="flex items-center gap-2">
                         <h2 class="text-base font-bold font-serif uppercase tracking-wider" id="label-date-ancre">Jeudi 25 Juin 2026</h2>
-                        <button onclick="allerAujourdhui()" id="btn-today" class="hidden text-[10px] bg-red-600 text-white font-bold px-2 py-0.5 rounded-full">AUJ</button>
+                        <button onclick="allerAujourdhui()" ontouchstart="allerAujourdhui()" id="btn-today" class="hidden text-[10px] bg-red-600 text-white font-bold px-2 py-0.5 rounded-full">AUJ</button>
                     </div>
                     <div class="flex gap-5 text-base font-bold">
-                        <button onclick="naviguerDate(-1)" class="px-2 py-1">◀</button>
-                        <button onclick="naviguerDate(1)" class="px-2 py-1">▶</button>
+                        <button onclick="naviguerDate(-1)" ontouchstart="naviguerDate(-1)" class="px-2 py-1">◀</button>
+                        <button onclick="naviguerDate(1)" ontouchstart="naviguerDate(1)" class="px-2 py-1">▶</button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-4 gap-1 p-1 bg-black/5 rounded-lg text-center text-xs font-bold">
-                    <button onclick="setMode(0)" id="btn-mode-0" class="py-2 rounded-md text-gray-500">Jour</button>
-                    <button onclick="setMode(1)" id="btn-mode-1" class="py-2 rounded-md text-gray-500">Sem.</button>
-                    <button onclick="setMode(2)" id="btn-mode-2" class="py-2 rounded-md text-gray-500">Mois</button>
-                    <button onclick="setMode(3)" id="btn-mode-3" class="py-2 rounded-md text-gray-500">Année</button>
+                    <button onclick="setMode(0)" ontouchstart="setMode(0)" id="btn-mode-0" class="py-2 rounded-md text-gray-500">Jour</button>
+                    <button onclick="setMode(1)" ontouchstart="setMode(1)" id="btn-mode-1" class="py-2 rounded-md text-gray-500">Sem.</button>
+                    <button onclick="setMode(2)" ontouchstart="setMode(2)" id="btn-mode-2" class="py-2 rounded-md text-gray-500">Mois</button>
+                    <button onclick="setMode(3)" ontouchstart="setMode(3)" id="btn-mode-3" class="py-2 rounded-md text-gray-500">Année</button>
                 </div>
             </div>
 
-            <!-- Contenu de l'agenda -->
             <div id="moteur-agenda" class="flex-1 overflow-y-auto p-4 no-scrollbar"></div>
             
-            <div onclick="ouvrirNotes()" class="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-24 bg-amber-600/30 rounded-l-md cursor-pointer flex items-center justify-center text-[10px] text-amber-900 font-bold">◀</div>
+            <div onclick="ouvrirNotes()" ontouchstart="ouvrirNotes()" class="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-24 bg-amber-600/30 rounded-l-md cursor-pointer flex items-center justify-center text-[10px] text-amber-900 font-bold">◀</div>
         </main>
 
-        <!-- VOLET GLISSANT : LES NOTES -->
         <div id="volet-notes" class="absolute top-12 bottom-2 right-0 w-[92%] z-40 translate-x-full flex shadow-2xl">
             <div class="flex-1 rounded-l-xl p-4 flex flex-col border-l border-black/10" id="page-droite" style="background-color: #faf9f5;">
                 <div class="flex justify-between items-center mb-3 border-b border-black/5 pb-1">
                     <h3 class="text-sm italic font-serif opacity-50">Notes Volantes</h3>
-                    <button onclick="fermerNotes()" class="text-xs font-bold text-amber-800 bg-amber-100 px-3 py-1 rounded-lg">Glisser ➔</button>
+                    <button onclick="fermerNotes()" ontouchstart="fermerNotes()" class="text-xs font-bold text-amber-800 bg-amber-100 px-3 py-1 rounded-lg">Glisser ➔</button>
                 </div>
                 <div class="flex-1 relative rounded-lg overflow-hidden p-1" id="box-fond-papier">
                     <textarea id="zone-notes" oninput="sauverNotes()" class="w-full h-full bg-transparent resize-none border-none outline-none focus:ring-0 p-1 text-base" placeholder="Écrivez vos notes ici..."></textarea>
@@ -107,12 +100,11 @@
 
     </div>
 
-    <!-- MODALE RDV COMPLÈTE -->
     <div id="modale-editeur" class="fixed inset-0 bg-black/60 z-50 hidden flex items-end justify-center p-4 backdrop-blur-xs">
         <div class="bg-[#1c1c1e] text-white w-full rounded-2xl p-5 space-y-4 shadow-2xl border border-white/10">
             <div class="flex justify-between items-center border-b border-white/10 pb-2">
                 <h4 id="editeur-titre-mode" class="font-bold text-base">Événement</h4>
-                <button onclick="fermerEditeur()" class="text-blue-400 text-sm font-medium">Annuler</button>
+                <button onclick="fermerEditeur()" ontouchstart="fermerEditeur()" class="text-blue-400 text-sm font-medium">Annuler</button>
             </div>
             <div class="space-y-3">
                 <input type="text" id="form-titre" placeholder="Titre" class="w-full bg-[#2c2c2e] px-3 py-2.5 rounded-lg text-sm outline-none">
@@ -132,32 +124,31 @@
                 <div>
                     <label class="text-xs text-gray-400 block mb-1">Catégorie</label>
                     <div class="flex flex-wrap gap-1.5" id="form-cats">
-                        <button onclick="setFormCat('Pro')" id="cat-Pro" class="px-3 py-1.5 rounded-full text-xs font-bold border">Pro</button>
-                        <button onclick="setFormCat('Perso')" id="cat-Perso" class="px-3 py-1.5 rounded-full text-xs font-bold border">Perso</button>
-                        <button onclick="setFormCat('Loisir')" id="cat-Loisir" class="px-3 py-1.5 rounded-full text-xs font-bold border">Loisir</button>
-                        <button onclick="setFormCat('Médical')" id="cat-Médical" class="px-3 py-1.5 rounded-full text-xs font-bold border">Médical</button>
-                        <button onclick="setFormCat('Important')" id="cat-Important" class="px-3 py-1.5 rounded-full text-xs font-bold border">Important</button>
+                        <button onclick="setFormCat('Pro')" class="px-3 py-1.5 rounded-full text-xs font-bold border" id="cat-Pro">Pro</button>
+                        <button onclick="setFormCat('Perso')" class="px-3 py-1.5 rounded-full text-xs font-bold border" id="cat-Perso">Perso</button>
+                        <button onclick="setFormCat('Loisir')" class="px-3 py-1.5 rounded-full text-xs font-bold border" id="cat-Loisir">Loisir</button>
+                        <button onclick="setFormCat('Médical')" class="px-3 py-1.5 rounded-full text-xs font-bold border" id="cat-Médical">Médical</button>
+                        <button onclick="setFormCat('Important')" class="px-3 py-1.5 rounded-full text-xs font-bold border" id="cat-Important">Important</button>
                     </div>
                 </div>
             </div>
             <div class="pt-2 flex gap-2">
-                <button onclick="supprimerRDV()" id="btn-supprimer-rdv" class="hidden bg-red-600 hover:bg-red-700 py-2.5 px-4 rounded-xl font-medium text-sm">🗑️</button>
-                <button onclick="validerRDV()" class="flex-1 bg-blue-600 hover:bg-blue-700 py-2.5 rounded-xl font-bold text-sm text-center">Enregistrer</button>
+                <button onclick="supprimerRDV()" ontouchstart="supprimerRDV()" id="btn-supprimer-rdv" class="hidden bg-red-600 hover:bg-red-700 py-2.5 px-4 rounded-xl font-medium text-sm">🗑️</button>
+                <button onclick="validerRDV()" ontouchstart="validerRDV()" class="flex-1 bg-blue-600 hover:bg-blue-700 py-2.5 rounded-xl font-bold text-sm text-center">Enregistrer</button>
             </div>
         </div>
     </div>
 
-    <!-- MODALE RÉGLAGES -->
     <div id="modale-reglages" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-[#1c1c1e] text-white w-full max-w-xs rounded-2xl p-4 space-y-4 text-sm border border-white/10">
             <div class="flex justify-between items-center border-b border-white/10 pb-2">
                 <h3 class="font-bold text-base">Réglages</h3>
-                <button onclick="fermerReglages()" class="text-blue-400 font-bold">OK</button>
+                <button onclick="fermerReglages()" ontouchstart="fermerReglages()" class="text-blue-400 font-bold">OK</button>
             </div>
             <div class="space-y-2">
                 <div class="space-y-1">
                     <label class="text-[10px] text-gray-400 font-semibold uppercase">Le Papier</label>
-                    <select id="reg-papier" onchange="changeRegrage('stylePapier', this.value)" class="w-full bg-[#2c2c2e] p-2 rounded-lg text-xs outline-none">
+                    <select id="reg-papier" onchange="changeRegrage('stylePapier', this.value)" class="w-full bg-[#2c2c2e] p-2 rounded-lg text-xs outline-none text-white">
                         <option value="ligné">📝 Ligné</option>
                         <option value="quadrillé">🔲 Carré</option>
                         <option value="blanc">📄 Blanc</option>
@@ -165,7 +156,7 @@
                 </div>
                 <div class="space-y-1">
                     <label class="text-[10px] text-gray-400 font-semibold uppercase">Écriture</label>
-                    <select id="reg-police" onchange="changeRegrage('stylePoliceNotes', this.value)" class="w-full bg-[#2c2c2e] p-2 rounded-lg text-xs outline-none">
+                    <select id="reg-police" onchange="changeRegrage('stylePoliceNotes', this.value)" class="w-full bg-[#2c2c2e] p-2 rounded-lg text-xs outline-none text-white">
                         <option value="manuscrit">✍️ Main</option>
                         <option value="classique">📜 Classique</option>
                         <option value="moderne">📱 Digitale</option>
@@ -175,7 +166,7 @@
             
             <div class="pt-3 border-t border-white/10 space-y-2">
                 <label class="text-[10px] text-gray-400 font-semibold uppercase block">Sauvegarde</label>
-                <button onclick="exporterJSON()" class="w-full bg-indigo-600/30 text-indigo-400 border border-indigo-500/30 py-2 rounded-lg text-xs font-medium">Exporter vers Fichiers (JSON)</button>
+                <button onclick="exporterJSON()" ontouchstart="exporterJSON()" class="w-full bg-indigo-600/30 text-indigo-400 border border-indigo-500/30 py-2 rounded-lg text-xs font-medium">Exporter vers Fichiers (JSON)</button>
                 <label class="w-full bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 py-2 rounded-lg text-xs font-medium block text-center cursor-pointer">
                     Importer depuis Fichiers (JSON)
                     <input type="file" accept=".json" class="hidden" onchange="importerJSON(this)">
@@ -185,18 +176,17 @@
     </div>
 
     <script>
-        // Sécurité LocalStorage pour éviter les crashs de démarrage
         let settings = { stylePapier: 'ligné', stylePoliceNotes: 'manuscrit', couleurStylos: 'encre' };
         try {
             settings.stylePapier = localStorage.getItem('iphone_stylePapier') || 'ligné';
             settings.stylePoliceNotes = localStorage.getItem('iphone_stylePoliceNotes') || 'manuscrit';
             settings.couleurStylos = localStorage.getItem('iphone_couleurStylos') || 'encre';
-        } catch(e) { console.error(e); }
+        } catch(e) {}
 
         let evenements = [];
         try {
             evenements = JSON.parse(localStorage.getItem('events_iphone')) || [];
-        } catch(e) { evenements = []; }
+        } catch(e) {}
 
         let modeAffichage = 2; 
         let dateAncre = new Date();
@@ -231,7 +221,12 @@
         function sauverNotes() {
             localStorage.setItem('notes_iphone', document.getElementById('zone-notes').value);
         }
-        function ouvrirReglages() { document.getElementById('modale-reglages').style.display = "flex"; }
+        
+        // Modification : ajout du stopPropagation pour éviter les interférences tactiles sur iOS
+        function ouvrirReglages(e) { 
+            if(e) { e.stopPropagation(); e.preventDefault(); }
+            document.getElementById('modale-reglages').style.display = "flex"; 
+        }
         function fermerReglages() { document.getElementById('modale-reglages').style.display = "none"; }
         
         function changeRegrage(cle, valeur) {
@@ -316,10 +311,10 @@
                         <span class="text-sm font-bold opacity-40 w-10">${String(h).padStart(2, '0')}h</span>
                         <div class="flex-1 h-full flex items-center">`;
                     if(rdv.length === 0) {
-                        html += `<button onclick="ouvrirEditeur(${h})" class="w-full h-full text-left text-black/5 text-base flex items-center">➕</button>`;
+                        html += `<button onclick="ouvrirEditeur(${h})" ontouchstart="ouvrirEditeur(${h})" class="w-full h-full text-left text-black/5 text-base flex items-center">➕</button>`;
                     } else {
                         rdv.forEach(r => {
-                            html += `<div onclick="ouvrirModif('${r.id}')" class="w-full text-sm font-bold p-2 rounded" style="background: ${couleursCats[r.categorie]}15; color: #1c1c1e; border-left: 4px solid ${couleursCats[r.categorie]}">${r.titre}</div>`;
+                            html += `<div onclick="ouvrirModif('${r.id}')" ontouchstart="ouvrirModif('${r.id}')" class="w-full text-sm font-bold p-2 rounded" style="background: ${couleursCats[r.categorie]}15; color: #1c1c1e; border-left: 4px solid ${couleursCats[r.categorie]}">${r.titre}</div>`;
                         });
                     }
                     html += `</div></div>`;
@@ -335,7 +330,7 @@
                         let d = new Date(r.date);
                         return d.getDate() === cal.getDate() && d.getMonth() === cal.getMonth() && d.getFullYear() === cal.getFullYear();
                     });
-                    html += `<div onclick="redirigerJour('${cal.toISOString()}')" class="p-4 rounded-xl bg-black/5 flex justify-between items-center active:bg-black/10">
+                    html += `<div onclick="redirigerJour('${cal.toISOString()}')" ontouchstart="redirigerJour('${cal.toISOString()}')" class="p-4 rounded-xl bg-black/5 flex justify-between items-center active:bg-black/10">
                         <span class="text-sm font-bold capitalize">${cal.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric' })}</span>
                         ${rdv.length > 0 ? `<span class="text-xs font-bold bg-black/10 px-2.5 py-1 rounded-md">${rdv.length} rdv</span>` : ''}
                     </div>`;
@@ -359,7 +354,7 @@
                         let d = new Date(r.date);
                         return d.getDate() === j && d.getMonth() === dateAncre.getMonth() && d.getFullYear() === dateAncre.getFullYear();
                     });
-                    html += `<button onclick="redirigerJour('${new Date(dateAncre.getFullYear(), dateAncre.getMonth(), j).toISOString()}')" class="aspect-square rounded-xl flex flex-col items-center justify-center p-1 border border-black/5 ${estAuj ? 'text-white font-bold' : 'bg-black/[0.02]'}" style="${estAuj ? 'background-color: #b91c1c;' : ''}">
+                    html += `<button onclick="redirigerJour('${new Date(dateAncre.getFullYear(), dateAncre.getMonth(), j).toISOString()}')" ontouchstart="redirigerJour('${new Date(dateAncre.getFullYear(), dateAncre.getMonth(), j).toISOString()}')" class="aspect-square rounded-xl flex flex-col items-center justify-center p-1 border border-black/5 ${estAuj ? 'text-white font-bold' : 'bg-black/[0.02]'}" style="${estAuj ? 'background-color: #b91c1c;' : ''}">
                         <span class="text-sm">${j}</span>
                         <div class="w-1.5 h-1.5 rounded-full mt-0.5 ${rdv ? (estAuj ? 'bg-white' : 'bg-amber-600') : 'bg-transparent'}"></div>
                     </button>`;
@@ -370,7 +365,7 @@
                 let html = `<div class="grid grid-cols-2 gap-2">`;
                 for(let m=0; m<12; m++) {
                     let dMois = new Date(dateAncre.getFullYear(), m, 1);
-                    html += `<div onclick="redirigerMois(${m})" class="bg-black/5 p-2 rounded-xl flex flex-col">
+                    html += `<div onclick="redirigerMois(${m})" ontouchstart="redirigerMois(${m})" class="bg-black/5 p-2 rounded-xl flex flex-col">
                         <h4 class="text-xs font-bold text-red-700 font-serif mb-1 capitalize text-center border-b border-black/5 pb-0.5">${dMois.toLocaleDateString('fr-FR', {month: 'long'})}</h4>
                         <div class="grid grid-cols-7 gap-0.5 text-[8px] text-center text-black/30">`;
                     
@@ -400,7 +395,7 @@
             setFormCat('Pro');
             document.getElementById('modale-editeur').style.display = "flex";
         }
-        function ouvrirModif(id) {
+        function abrirModif(id) {
             targetRdvId = id;
             let r = evenements.find(x => x.id === id);
             document.getElementById('editeur-titre-mode').innerText = "Modifier l'Événement";
@@ -486,7 +481,6 @@
             reader.readAsText(file);
         }
 
-        // GESTES DE GLISSEMENT RE-CALIBRÉS
         let startX = 0; let startY = 0;
         document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }, {passive:true});
         document.addEventListener('touchend', e => {
