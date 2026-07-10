@@ -458,13 +458,31 @@
         }
 
         function exporterJSON() {
-            const packageGlobal = { evenements, notes: localStorage.getItem('notes_iphone') || '' };
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(packageGlobal, null, 2));
-            const dl = document.createElement('a');
-            dl.setAttribute("href", dataStr);
-            dl.setAttribute("download", "agenda_iphone_backup.json");
-            document.body.appendChild(dl); dl.click(); dl.remove();
-        }
+    const packageGlobal = { evenements, notes: localStorage.getItem('notes_iphone') || '' };
+    const jsonString = JSON.stringify(packageGlobal, null, 2);
+
+    // On vérifie si l'iPhone prend en charge le partage de fichiers (Web Share API)
+    if (navigator.canShare && navigator.share) {
+        // Crée un vrai fichier temporaire en mémoire
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const fichier = new File([blob], "agenda_iphone_backup.json", { type: 'application/json' });
+
+        navigator.share({
+            files: [fichier],
+            title: 'Sauvegarde de mon Agenda',
+            text: 'Voici le fichier de sauvegarde de votre agenda.'
+        })
+        .then(() => console.log('Partage réussi'))
+        .catch((error) => console.log('Erreur ou annulation :', error));
+    } else {
+        // Solution de secours (ancienne méthode) si testé sur un vieux navigateur
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(jsonString);
+        const dl = document.createElement('a');
+        dl.setAttribute("href", dataStr);
+        dl.setAttribute("download", "agenda_iphone_backup.json");
+        document.body.appendChild(dl); dl.click(); dl.remove();
+    }
+}
         function importerJSON(input) {
             const file = input.files[0]; if (!file) return;
             const reader = new FileReader();
