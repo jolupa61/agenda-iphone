@@ -281,6 +281,7 @@
             if(document.getElementById('reg-papier')) document.getElementById('reg-papier').value = settings.stylePapier;
             if(document.getElementById('reg-police')) document.getElementById('reg-police').value = settings.stylePoliceNotes;
 
+            // AMÉLIORATION 1 : Comparaison des dates sans l'influence de l'heure exacte
             const auj = new Date();
             const estAuj = dateAncre.getDate() === auj.getDate() && dateAncre.getMonth() === auj.getMonth() && dateAncre.getFullYear() === auj.getFullYear();
             if(document.getElementById('btn-today')) {
@@ -307,7 +308,7 @@
                     });
                     html += `<div class="flex items-center gap-3 h-14 border-b border-black/5 relative">
                         <span class="text-sm font-bold opacity-40 w-10">${String(h).padStart(2, '0')}h</span>
-                        <div class="flex-1 h-full flex items-center pr-10">`; // Espace à droite reservé pour le bouton +
+                        <div class="flex-1 h-full flex items-center pr-10">`;
                     if(rdv.length === 0) {
                         html += `<div class="w-full h-full"></div>
                         <button onclick="ouvrirEditeur(${h})" ontouchstart="ouvrirEditeur(${h})" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-sm font-bold bg-black/5 opacity-20 rounded-full active:opacity-60">➕</button>`;
@@ -383,7 +384,7 @@
         function redirigerJour(iso) { dateAncre = new Date(iso); setMode(0); syncUI(); }
         function redirigerMois(m) { dateAncre.setMonth(m); setMode(2); syncUI(); }
 
-        function ouvrirEditeur(heure) {
+        function abrirEditeur(heure) {
             targetRdvId = null;
             document.getElementById('editeur-titre-mode').innerText = "Nouvel Événement";
             document.getElementById('form-titre').value = "";
@@ -457,32 +458,31 @@
             fermerEditeur(); syncUI();
         }
 
+        // AMÉLIORATION 2 : Activation de l'API Share d'Apple pour choisir le dossier dans "Fichiers"
         function exporterJSON() {
-    const packageGlobal = { evenements, notes: localStorage.getItem('notes_iphone') || '' };
-    const jsonString = JSON.stringify(packageGlobal, null, 2);
+            const packageGlobal = { evenements, notes: localStorage.getItem('notes_iphone') || '' };
+            const jsonString = JSON.stringify(packageGlobal, null, 2);
 
-    // On vérifie si l'iPhone prend en charge le partage de fichiers (Web Share API)
-    if (navigator.canShare && navigator.share) {
-        // Crée un vrai fichier temporaire en mémoire
-        const blob = new Blob([jsonString], { type: 'application/json' });
-        const fichier = new File([blob], "agenda_iphone_backup.json", { type: 'application/json' });
+            if (navigator.canShare && navigator.share) {
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const fichier = new File([blob], "agenda_iphone_backup.json", { type: 'application/json' });
 
-        navigator.share({
-            files: [fichier],
-            title: 'Sauvegarde de mon Agenda',
-            text: 'Voici le fichier de sauvegarde de votre agenda.'
-        })
-        .then(() => console.log('Partage réussi'))
-        .catch((error) => console.log('Erreur ou annulation :', error));
-    } else {
-        // Solution de secours (ancienne méthode) si testé sur un vieux navigateur
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(jsonString);
-        const dl = document.createElement('a');
-        dl.setAttribute("href", dataStr);
-        dl.setAttribute("download", "agenda_iphone_backup.json");
-        document.body.appendChild(dl); dl.click(); dl.remove();
-    }
-}
+                navigator.share({
+                    files: [fichier],
+                    title: 'Sauvegarde de mon Agenda',
+                    text: 'Voici votre fichier de sauvegarde.'
+                })
+                .then(() => console.log('Exportation réussie'))
+                .catch((error) => console.log('Exportation annulée :', error));
+            } else {
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(jsonString);
+                const dl = document.createElement('a');
+                dl.setAttribute("href", dataStr);
+                dl.setAttribute("download", "agenda_iphone_backup.json");
+                document.body.appendChild(dl); dl.click(); dl.remove();
+            }
+        }
+
         function importerJSON(input) {
             const file = input.files[0]; if (!file) return;
             const reader = new FileReader();
@@ -498,9 +498,17 @@
             reader.readAsText(file);
         }
 
+        // AMÉLIORATION 3 : Sécurisation de la capture tactile des balayages (Swipe)
         let startX = 0; let startY = 0;
-        document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }, {passive:true});
+        document.addEventListener('touchstart', e => { 
+            if(e.touches && e.touches[0]) {
+                startX = e.touches[0].clientX; 
+                startY = e.touches[0].clientY; 
+            }
+        }, {passive:true});
+        
         document.addEventListener('touchend', e => {
+            if(!e.changedTouches || !e.changedTouches[0]) return;
             let diffX = e.changedTouches[0].clientX - startX;
             let diffY = e.changedTouches[0].clientY - startY;
             if(Math.abs(diffX) > 80 && Math.abs(diffY) < 40) {
