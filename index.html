@@ -35,14 +35,16 @@
         <p class="font-serif text-lg">Merci de remettre votre iPhone en mode Portrait.</p>
     </div>
 
-    <div id="vue-couverture" class="fixed inset-0 flex items-center justify-center p-6 z-50 bg-[#242426]">
-        <div onclick="ouvrirCarnet()" ontouchstart="ouvrirCarnet()" class="w-full max-w-xs aspect-[3/4] rounded-2xl relative shadow-2xl flex flex-col items-center justify-between p-8 text-center bg-[#141416] text-[#ccaa66] cursor-pointer select-none" id="cuir-couverture">
-            <div class="absolute left-0 top-0 bottom-0 w-4 bg-black/30 rounded-l-2xl border-r border-black/10"></div>
-            <div class="mt-12 flex flex-col items-center gap-4">
-                <span class="text-4xl">📔</span>
-                <h1 class="text-3xl font-serif tracking-[0.3em] font-bold">AGENDA</h1>
+        <div id="vue-couverture" class="fixed inset-0 flex items-center justify-center z-50 bg-[#242426]">
+        <div onclick="ouvrirCarnet()" ontouchstart="ouvrirCarnet()" class="w-full h-full rounded-none relative shadow-2xl flex flex-col items-center justify-between p-12 text-center bg-[#141416] text-[#ccaa66] cursor-pointer select-none" id="cuir-couverture">
+            <div class="absolute left-0 top-0 bottom-0 w-6 bg-black/30 border-r border-black/10"></div>
+            
+            <div class="mt-32 flex flex-col items-center gap-6">
+                <span class="text-7xl">📔</span>
+                <h1 class="text-4xl font-serif tracking-[0.3em] font-bold">AGENDA</h1>
             </div>
-            <div class="bg-white/5 text-white/60 text-xs font-semibold tracking-wider uppercase px-6 py-3 rounded-xl border border-white/10 mb-4 pointer-events-none">
+            
+            <div class="bg-white/5 text-white/60 text-sm font-semibold tracking-wider uppercase px-8 py-4 rounded-xl border border-white/10 mb-20 pointer-events-none active:scale-95 transition-transform">
                 Ouvrir le carnet
             </div>
         </div>
